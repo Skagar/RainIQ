@@ -1,0 +1,32 @@
+server:
+  port: 8081
+
+spring:
+
+  application:
+    name: design-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/rainiq_design
+    username: postgres
+    password: rainiq123
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path:  /swagger-ui.html
+
+jwt:
+  secret: ${JWT_SECRET:thisIsAVeryLongSecretKeyForRainIQProjectThatIsAtLeast256BitsLong}
+  expiration: ${JWT_EXPIRATION:86400000}
