@@ -37,7 +37,7 @@ public class AuthService {
                 password(passwordEncoder.encode(request.getPassword())).
                 role(request.getRole()).build();
        userRepository.save(user);
-       return new AuthResponse("User Is Registered", jwtUtil.generateToken(request.getEmail()), request.getName(), request.getEmail(), request.getRole());
+       return new AuthResponse("User Is Registered", jwtUtil.generateToken(request.getEmail(),request.getRole().toString()), request.getName(), request.getEmail(), request.getRole());
    }
     public AuthResponse login(LoginRequest loginRequest) {
         User user = userRepository.findByEmail(loginRequest.getEmail())
@@ -49,7 +49,7 @@ public class AuthService {
 
         return new AuthResponse(
                 "Logged in Successfully",
-                jwtUtil.generateToken(user.getEmail()),
+                jwtUtil.generateToken(user.getEmail(),user.getRole().toString()),
                 user.getName(),
                 user.getEmail(),
                 user.getRole()

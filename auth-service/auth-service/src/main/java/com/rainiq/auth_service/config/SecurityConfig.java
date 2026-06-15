@@ -44,7 +44,7 @@ public class SecurityConfig {
     @Bean
     public FilterRegistrationBean<JwtAuthFilter> jwtFilterRegistration(JwtAuthFilter filter) {
         FilterRegistrationBean<JwtAuthFilter> registration = new FilterRegistrationBean<>(filter);
-        registration.setEnabled(false);
+        registration.setEnabled(false); // FilterRegistrationBean with setEnabled(false) tells Spring's servlet container — "don't register this as a standalone filter." It stays only in the security chain.
         return registration;
     }
     @Bean
