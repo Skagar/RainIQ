@@ -6,4 +6,5 @@ CREATE TABLE reviews(
     comments VARCHAR(255),
     reviewed_at TIMESTAMP,
     FOREIGN KEY (design_id) REFERENCES designs(id)
+
 );
