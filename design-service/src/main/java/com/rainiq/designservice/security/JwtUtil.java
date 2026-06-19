@@ -38,6 +38,7 @@ public class JwtUtil {
             Date expiry = extractExpiration(token);
             return new Date().before(expiry);
         } catch (Exception e) {
+            System.out.println("TOKEN VALIDATION FAILED: " + e.getMessage());
             return false;
         }
     }
