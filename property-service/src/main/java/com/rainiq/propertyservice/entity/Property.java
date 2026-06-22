@@ -2,10 +2,7 @@ package com.rainiq.propertyservice.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -17,6 +14,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Property {
 
     @Id
@@ -25,6 +23,9 @@ public class Property {
 
     @Column(nullable = false)
     private String ownerEmail;
+
+    @Column(nullable = false)
+    private String registrationNumber;
 
     @Column(nullable = false)
     private String address;
