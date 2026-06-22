@@ -1,7 +1,7 @@
 create table properties(
      id UUID primary key default gen_random_uuid(),
     owner_email varchar(100) not null,
-     registration_number varchar(50) not null unique
+    registration_number varchar(50) not null unique,
     address varchar(100) not null ,
     city varchar(50) not null ,
     state varchar(50) not null ,

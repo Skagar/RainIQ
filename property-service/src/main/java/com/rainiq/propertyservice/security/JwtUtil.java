@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 @Component
 public class JwtUtil {
-    @Value("${jwt.secret}")
+    @Value("${JWT_SECRET:thisIsAVeryLongSecretKeyForRainIQProjectThatIsAtLeast256BitsLong}")
     private String secretKey;
 
     private SecretKey getSigningKey() {
