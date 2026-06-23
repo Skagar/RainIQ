@@ -1,0 +1,13 @@
+package com.rainiq.rainfallservice;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class RainfallServiceApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(RainfallServiceApplication.class, args);
+    }
+
+}
