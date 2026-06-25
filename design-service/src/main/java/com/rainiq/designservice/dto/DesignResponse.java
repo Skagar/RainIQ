@@ -13,6 +13,7 @@ import java.util.UUID;
 @Setter
 @Builder
 public class DesignResponse {
+    private UUID propertyId;
     private UUID designId;
     private String userEmail;
     private String location;

@@ -28,7 +28,7 @@ public class ReviewController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('INSPECTOR') or hasRole('MUNICIPAL_OFFICER')")
+    @PreAuthorize("hasRole('MUNICIPAL_OFFICER')")
     public ResponseEntity<ReviewResponse> updateReviewByDesignId(@PathVariable UUID id, @RequestBody @Valid ReviewRequest reviewRequest)
     {
         String email= (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

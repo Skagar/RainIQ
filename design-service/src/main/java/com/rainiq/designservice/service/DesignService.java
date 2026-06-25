@@ -1,5 +1,6 @@
 package com.rainiq.designservice.service;
 
+import com.rainiq.designservice.client.PropertyClient;
 import com.rainiq.designservice.dto.DesignRequest;
 import com.rainiq.designservice.dto.DesignResponse;
 import com.rainiq.designservice.entity.Design;
@@ -12,6 +13,8 @@ import com.rainiq.designservice.repo.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 
 import java.util.ArrayList;
@@ -25,11 +28,18 @@ import java.util.stream.Collectors;
 public class DesignService {
     private final DesignRepository designRepository;
     private final ReviewRepository reviewRepository;
-
+    private final PropertyClient propertyClient;
     @Transactional
     public DesignResponse submitDesign(DesignRequest designRequest, String userEmail)
     {
-        Optional<Design> existingDesign =designRepository.findByUserEmailAndLocation(userEmail,designRequest.getLocation());
+        String token = ((ServletRequestAttributes) RequestContextHolder
+                .getRequestAttributes()).getRequest()
+                .getHeader("Authorization").substring(7);
+
+        if (!propertyClient.propertyExists(designRequest.getPropertyId(), token)) {
+            throw new ResourceNotFoundException("Property not found with given ID");
+        }
+        Optional<Design> existingDesign =designRepository.findByPropertyId(designRequest.getPropertyId());
         if(existingDesign.isPresent())
         {
             Design  design= existingDesign.get();
@@ -59,6 +69,7 @@ public class DesignService {
             }
         }
            Design newdesign=Design.builder()
+                   .propertyId(designRequest.getPropertyId())
                    .userEmail(userEmail)
                    .area(designRequest.getArea())
                    .location(designRequest.getLocation()).build();
@@ -109,26 +120,10 @@ public class DesignService {
                     Review review=optionalReview.get();
                     if(review.getOfficerEmail()==null)
                     {
-                        if(design.getLocation().equalsIgnoreCase(designRequest.getLocation()))
-                        {
                             design.setLocation(designRequest.getLocation());
                             design.setArea(designRequest.getArea());
                             designRepository.save(design);
                             return maptoDesignResponse(design,review);
-                        }
-                        else
-                        {
-                            Optional<Design>optionalDesign=designRepository.findByUserEmailAndLocation(userEmail,designRequest.getLocation());
-                            if(optionalDesign.isPresent())
-                                throw new InvalidRequestException("Active design already exists for this location");
-                            else
-                            {
-                                design.setLocation(designRequest.getLocation());
-                                design.setArea(designRequest.getArea());
-                                designRepository.save(design);
-                                return maptoDesignResponse(design,review);
-                            }
-                        }
                     }
                     else
                         throw new InvalidRequestException("Cannot Update the design currently under Review");
@@ -157,6 +152,7 @@ public class DesignService {
     private DesignResponse maptoDesignResponse(Design design,Review review)
     {
         DesignResponse designResponse=new DesignResponse();
+        designResponse.setPropertyId(design.getPropertyId());
         designResponse.setDesignId(design.getId());
         designResponse.setUserEmail(design.getUserEmail());
         designResponse.setLocation(design.getLocation());

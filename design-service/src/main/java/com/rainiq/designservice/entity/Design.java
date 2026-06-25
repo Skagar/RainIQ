@@ -20,6 +20,9 @@ public class Design {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id ;
 
+    @Column(name = "property_id", nullable = false)
+    private UUID propertyId;
+
     @Column(nullable = false, name = "user_email")
     private String userEmail;
 

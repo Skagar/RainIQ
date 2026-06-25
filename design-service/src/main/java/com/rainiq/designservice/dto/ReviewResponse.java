@@ -13,6 +13,7 @@ import java.util.UUID;
 @Setter
 @Builder
 public class ReviewResponse {
+    private UUID propertyId;
     private UUID designId;
     private UUID reviewId;
     private String userEmail;

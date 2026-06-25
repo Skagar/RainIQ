@@ -53,6 +53,7 @@ public class ReviewService {
     private ReviewResponse maptoReviewResponse(Review review)
     {
         ReviewResponse reviewResponse=new ReviewResponse();
+        reviewResponse.setPropertyId(review.getDesign().getPropertyId());
         reviewResponse.setDesignId(review.getDesign().getId());
         reviewResponse.setReviewId(review.getId());
         reviewResponse.setUserEmail(review.getDesign().getUserEmail());

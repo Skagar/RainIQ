@@ -12,6 +12,5 @@ import java.util.UUID;
 @Repository
 public interface DesignRepository extends JpaRepository<Design, UUID> {
     List<Design> findByUserEmail(String email);
-    List<Design> findByLocation(String location);
-    Optional<Design> findByUserEmailAndLocation(String email,String location);
+    Optional<Design> findByPropertyId(UUID propertyId);
 }
