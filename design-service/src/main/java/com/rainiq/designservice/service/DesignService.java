@@ -6,11 +6,14 @@ import com.rainiq.designservice.dto.DesignResponse;
 import com.rainiq.designservice.entity.Design;
 import com.rainiq.designservice.entity.Review;
 import com.rainiq.designservice.entity.ReviewStatus;
+import com.rainiq.designservice.event.DesignSubmittedEvent;
 import com.rainiq.designservice.exception.InvalidRequestException;
 import com.rainiq.designservice.exception.ResourceNotFoundException;
 import com.rainiq.designservice.repo.DesignRepository;
 import com.rainiq.designservice.repo.ReviewRepository;
+import com.rainiq.designservice.topic.KafkaTopics;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -29,6 +32,14 @@ public class DesignService {
     private final DesignRepository designRepository;
     private final ReviewRepository reviewRepository;
     private final PropertyClient propertyClient;
+    private final KafkaTemplate<String, DesignSubmittedEvent>kafkaTemplate;
+    private void triggerKafka(UUID designId, UUID propertyId)
+    {
+        DesignSubmittedEvent designSubmittedEvent=DesignSubmittedEvent.builder()
+                .designId(designId)
+                .propertyId(propertyId).build();
+      kafkaTemplate.send(KafkaTopics.DESIGN_SUBMITTED,designId.toString(),designSubmittedEvent);
+    }
     @Transactional
     public DesignResponse submitDesign(DesignRequest designRequest, String userEmail)
     {
@@ -58,6 +69,7 @@ public class DesignService {
                     review.setReviewedAt(null);
                     designRepository.save(design);
                     reviewRepository.save(review);
+                    triggerKafka(design.getId(),design.getPropertyId());
                     return maptoDesignResponse(design, review);
                 }
                 else {
@@ -81,6 +93,7 @@ public class DesignService {
                                                    .status(ReviewStatus.PENDING).build();
            designRepository.save(newdesign);
            reviewRepository.save(newreview);
+           triggerKafka(newdesign.getId(),designRequest.getPropertyId());
            return maptoDesignResponse(newdesign,newreview);
 
     }
