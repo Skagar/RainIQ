@@ -37,6 +37,7 @@ public class PropertyService {
                     .pincode(propertyRequestDto.getPincode())
                     .area(propertyRequestDto.getArea())
                     .propertyType(propertyRequestDto.getPropertyType())
+                    .surfaceType(propertyRequestDto.getSurfaceType())
                     .status(PropertyStatus.UNDER_REVIEW)
                     .build();
             propertyRepository.save(property);
@@ -87,6 +88,7 @@ public class PropertyService {
                 property.setArea(propertyRequestDto.getArea());
                 property.setPropertyType(propertyRequestDto.getPropertyType());
                 property.setStatus(PropertyStatus.UNDER_REVIEW);
+                property.setSurfaceType(propertyRequestDto.getSurfaceType());
                 propertyRepository.save(property);
                 return mapToDto(property);
             }
@@ -124,6 +126,7 @@ public class PropertyService {
         propertyResponseDto.setStatus(property.getStatus());
         propertyResponseDto.setCreatedAt(property.getCreatedAt());
         propertyResponseDto.setUpdatedAt(property.getUpdatedAt());
+        propertyResponseDto.setSurfaceType(property.getSurfaceType());
         return propertyResponseDto;
     }
 }

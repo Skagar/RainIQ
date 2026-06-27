@@ -1,0 +1,1 @@
+alter table properties add  column surface_type VARCHAR(10) not null check(surface_type in ('RCC','TILED','PAVED'));

@@ -2,6 +2,7 @@ package com.rainiq.propertyservice.dto;
 
 import com.rainiq.propertyservice.entity.PropertyStatus;
 import com.rainiq.propertyservice.entity.PropertyType;
+import com.rainiq.propertyservice.entity.SurfaceType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +26,7 @@ public class PropertyResponseDto {
     private BigDecimal area;
     private PropertyType propertyType;
     private PropertyStatus status;
+    private SurfaceType surfaceType;
     private LocalDateTime createdAt;
     private  LocalDateTime updatedAt;
 

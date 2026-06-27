@@ -1,6 +1,7 @@
 package com.rainiq.propertyservice.dto;
 
 import com.rainiq.propertyservice.entity.PropertyType;
+import com.rainiq.propertyservice.entity.SurfaceType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -37,4 +38,7 @@ public class PropertyRequestDto {
 
     @NotNull(message = "Property type should not be empty")
     private PropertyType propertyType;
+
+    @NotNull(message = "Surface type cannot be null")
+    private SurfaceType surfaceType;
 }

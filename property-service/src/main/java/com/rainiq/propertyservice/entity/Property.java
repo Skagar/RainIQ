@@ -56,6 +56,10 @@ public class Property {
     @Column(name = "updated_at")
     private  LocalDateTime updatedAt;
 
+    @Column(nullable = false,name = "surface_type")
+    @Enumerated(EnumType.STRING)
+    private SurfaceType surfaceType;
+
     @PrePersist
     private void created()
     {
