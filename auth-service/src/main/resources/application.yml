@@ -36,4 +36,4 @@ springdoc:
 
 jwt:
   secret: ${JWT_SECRET:thisIsAVeryLongSecretKeyForRainIQProjectThatIsAtLeast256BitsLong}
-  expiration: ${JWT_EXPIRATION:86400000}
+  expiration: ${JWT_EXPIRATION:63072000000}

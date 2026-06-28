@@ -7,16 +7,10 @@ import com.rainiq.auth_service.entity.User;
 import com.rainiq.auth_service.exception.AuthException;
 import com.rainiq.auth_service.repository.UserRepository;
 import com.rainiq.auth_service.security.JwtUtil;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +43,7 @@ public class AuthService {
 
         return new AuthResponse(
                 "Logged in Successfully",
-                jwtUtil.generateToken(user.getEmail(),user.getRole().toString()),
+                jwtUtil.generateToken(user.getEmail(),user.getRole().toString() ),
                 user.getName(),
                 user.getEmail(),
                 user.getRole()

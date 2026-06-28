@@ -1,5 +1,5 @@
 package com.rainiq.auth_service.entity;
 
 public enum UserRole {
-    OWNER,ARCHITECT,MUNICIPAL_OFFICER,INSPECTOR
+    OWNER,ARCHITECT,MUNICIPAL_OFFICER,INSPECTOR,INTERNAL_SERVICE
 }
