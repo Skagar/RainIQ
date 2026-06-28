@@ -7,18 +7,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PropertyClientDto {
+public class DesignClientDto {
     @JsonProperty("area")
-    private BigDecimal propertyArea;
-
-    @JsonProperty("surfaceType")
-    private String surfaceType;
-
-    @JsonProperty("pincode")
-    private String pincode;
+    private BigDecimal designArea;
 }

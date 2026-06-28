@@ -1,6 +1,6 @@
 package com.rainiq.complianceservice.client;
 
-import com.rainiq.complianceservice.dto.PropertyClientDto;
+import com.rainiq.complianceservice.dto.DesignClientDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -8,23 +8,23 @@ import org.springframework.web.client.RestClient;
 import java.util.UUID;
 
 @Component
-public class PropertyClient {
+public class DesignClient {
     private final RestClient restClient;
 
     @Value("${internal.service.token}")
     private String token;
-    public PropertyClient(@Value("${property.service.url}") String baseUrl) {
+    public DesignClient(@Value("${design.service.url}") String baseUrl) {
         this.restClient = RestClient.builder().baseUrl(baseUrl).build();
     }
 
-    public PropertyClientDto getPropertyDetails(UUID propertyId)
+    public DesignClientDto getDesignDetails(UUID designId)
     {
         try
         {
-           return restClient.get().uri("/api/properties/{propertyId}",propertyId)
+            return restClient.get().uri("/api/designs/{designId}",designId)
                     .header("Authorization","Bearer "+ token)
                     .retrieve()
-                    .body(PropertyClientDto.class);
+                    .body(DesignClientDto.class);
 
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
