@@ -43,3 +43,6 @@ design:
 rainfall:
   service:
     url: http://localhost:8083
+internal:
+  service:
+    token: eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJpbnRlcm5hbEByYWluaXEuY29tIiwiaWF0IjoxNzgyNjQzNTYwLCJleHAiOjE4NDU3MTU1NjAsInJvbGUiOiJJTlRFUk5BTF9TRVJWSUNFIn0.AAKbNV5FQVu2pCWV6jiy3-oiJZ51fDgZCi1tGO_KrvfmM2EwCggwjzaPBoQcjwvo
