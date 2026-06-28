@@ -21,7 +21,7 @@ public class GeocodingClient {
 
     public GeocodingClientResponseDto getCoordinates(String pincode)
     {
-       GeocodingClientResponseDto[] geocodingClientResponseDto= restClient.get().uri("/search?postalcode={pincode}&api_key={apiKey}",pincode,apiKey).retrieve().body(GeocodingClientResponseDto[].class);
+       GeocodingClientResponseDto[] geocodingClientResponseDto= restClient.get().uri("/search?postalcode={pincode}&country=IN&api_key={apiKey}",pincode,apiKey).retrieve().body(GeocodingClientResponseDto[].class);
        if(geocodingClientResponseDto==null || geocodingClientResponseDto.length==0)
            throw new CoordinatesFetchException("Coordinates cannot be fetched for the given pincode");
        return geocodingClientResponseDto[0];
