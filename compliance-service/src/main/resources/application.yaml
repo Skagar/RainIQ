@@ -1,0 +1,45 @@
+server:
+  port: 8084
+spring:
+  application:
+    name: compliance-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/rainiq_compliance
+    username: postgres
+    password: rainiq123
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  flyway:
+    locations: classpath:db/migration
+    enabled: true
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: my-consumer-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: true
+jwt:
+  secret: ${JWT_SECRET:thisIsAVeryLongSecretKeyForRainIQProjectThatIsAtLeast256BitsLong}
+property:
+  service:
+    url: http://localhost:8082
+design:
+  service:
+    url: http://localhost:8081
+rainfall:
+  service:
+    url: http://localhost:8083
