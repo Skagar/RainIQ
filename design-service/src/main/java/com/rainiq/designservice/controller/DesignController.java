@@ -36,6 +36,12 @@ public class DesignController {
         return ResponseEntity.ok(designService.getMyDesigns(email));
     }
 
+    @GetMapping("{id}")
+    public ResponseEntity<DesignResponse> getDesignByid(@PathVariable UUID id)
+    {
+   return ResponseEntity.ok(designService.getDesignById(id));
+    }
+
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('OWNER') or hasRole('ARCHITECT')")
     public ResponseEntity<DesignResponse> updateDesign(@RequestBody @Valid DesignRequest designRequest, @PathVariable UUID id)

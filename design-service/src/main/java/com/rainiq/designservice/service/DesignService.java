@@ -117,7 +117,25 @@ public class DesignService {
         }
         return designResponses;
     }
-
+   public DesignResponse getDesignById(UUID designId)
+   {
+       Optional<Design> optionalDesign=designRepository.findById(designId);
+       if(optionalDesign.isPresent())
+       {
+           Design design=optionalDesign.get();
+           Optional<Review> optionalReview=reviewRepository.findByDesign_Id(designId);
+           if(optionalReview.isPresent())
+           {
+               Review review=optionalReview.get();
+               return maptoDesignResponse(design,review);
+           }
+           else
+               throw new ResourceNotFoundException("No review found with given design id");
+       }
+       else {
+           throw new ResourceNotFoundException("No design found with the given id");
+       }
+   }
     @Transactional
     public DesignResponse updateDesign(DesignRequest designRequest, String userEmail, UUID designId)
     {
