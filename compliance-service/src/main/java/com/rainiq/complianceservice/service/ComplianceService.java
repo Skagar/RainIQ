@@ -9,9 +9,13 @@ import com.rainiq.complianceservice.dto.PropertyClientDto;
 import com.rainiq.complianceservice.dto.RainfallClientDto;
 import com.rainiq.complianceservice.entity.ComplianceRecord;
 import com.rainiq.complianceservice.entity.ComplianceStatus;
+import com.rainiq.complianceservice.event.ComplianceCompletedEvent;
+import com.rainiq.complianceservice.event.ComplianceFailedEvent;
 import com.rainiq.complianceservice.event.DesignSubmittedEvent;
 import com.rainiq.complianceservice.exception.InsufficientException;
+import com.rainiq.complianceservice.topics.KafkaTopics;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -25,6 +29,25 @@ public class ComplianceService {
     private final DesignClient designClient;
     private final PropertyClient propertyClient;
     private final RainfallClient rainfallClient;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
+
+    private void triggerComplianceCompletedKafka(ComplianceRecord complianceRecord)
+    {
+        ComplianceCompletedEvent complianceCompletedEvent=ComplianceCompletedEvent.builder()
+                .designId(complianceRecord.getDesignId())
+                .propertyId(complianceRecord.getPropertyId())
+                .calculatedCapacity(complianceRecord.getCalculatedCapacity())
+                .recommendedArea(complianceRecord.getRecommendedArea()).build();
+        kafkaTemplate.send(KafkaTopics.COMPLIANCE_COMPLETED,complianceRecord.getDesignId().toString(),complianceCompletedEvent);
+    }
+    private void triggerComplianceFailedKafka(ComplianceRecord complianceRecord)
+    {
+        ComplianceFailedEvent complianceFailedEvent=ComplianceFailedEvent.builder()
+                .designId(complianceRecord.getDesignId())
+                .propertyId(complianceRecord.getPropertyId())
+                .reason(complianceRecord.getReason()).build();
+        kafkaTemplate.send(KafkaTopics.COMPLIANCE_FAILED,complianceRecord.getDesignId().toString(),complianceFailedEvent);
+    }
     public void processCompliance(DesignSubmittedEvent designSubmittedEvent)
     {
         UUID designId=designSubmittedEvent.getDesignId();
@@ -66,6 +89,7 @@ public class ComplianceService {
                         .complianceStatus(ComplianceStatus.PASSED)
                         .recommendedArea(BigDecimal.valueOf(0.2).multiply(propertyArea)).build();
                 complianceRepository.save(complianceRecord);
+                triggerComplianceCompletedKafka(complianceRecord);
             }
             else
             {
@@ -77,6 +101,7 @@ public class ComplianceService {
                         .reason("Design area insufficient for the given rainfall zone")
                         .recommendedArea(BigDecimal.valueOf(0.2).multiply(propertyArea)).build();
                 complianceRepository.save(complianceRecord);
+                triggerComplianceFailedKafka(complianceRecord);
             }
 
         }
@@ -101,6 +126,7 @@ public class ComplianceService {
                            .complianceStatus(ComplianceStatus.PASSED)
                            .recommendedArea(BigDecimal.valueOf(0.3).multiply(propertyArea)).build();
                 complianceRepository.save(complianceRecord);
+                triggerComplianceCompletedKafka(complianceRecord);
             }
             else
             {
@@ -112,6 +138,7 @@ public class ComplianceService {
                         .reason("Design area insufficient for the given rainfall zone")
                         .recommendedArea(BigDecimal.valueOf(0.3).multiply(propertyArea)).build();
                 complianceRepository.save(complianceRecord);
+                triggerComplianceFailedKafka(complianceRecord);
             }
         }
         else if (avgRainfall >0.0 && avgRainfall<600.0)
@@ -136,6 +163,7 @@ public class ComplianceService {
                         .complianceStatus(ComplianceStatus.PASSED)
                         .recommendedArea(BigDecimal.valueOf(0.4).multiply(propertyArea)).build();
                 complianceRepository.save(complianceRecord);
+                triggerComplianceCompletedKafka(complianceRecord);
             }
             else
             {
@@ -147,6 +175,7 @@ public class ComplianceService {
                         .reason("Design area insufficient for the given rainfall zone")
                         .recommendedArea(BigDecimal.valueOf(0.4).multiply(propertyArea)).build();
                 complianceRepository.save(complianceRecord);
+                triggerComplianceFailedKafka(complianceRecord);
             }
         }
         else
