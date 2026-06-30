@@ -4,6 +4,7 @@ import com.rainiq.complianceservice.Repository.ComplianceRepository;
 import com.rainiq.complianceservice.client.DesignClient;
 import com.rainiq.complianceservice.client.PropertyClient;
 import com.rainiq.complianceservice.client.RainfallClient;
+import com.rainiq.complianceservice.dto.ComplianceRecordDto;
 import com.rainiq.complianceservice.dto.DesignClientDto;
 import com.rainiq.complianceservice.dto.PropertyClientDto;
 import com.rainiq.complianceservice.dto.RainfallClientDto;
@@ -13,14 +14,18 @@ import com.rainiq.complianceservice.event.ComplianceCompletedEvent;
 import com.rainiq.complianceservice.event.ComplianceFailedEvent;
 import com.rainiq.complianceservice.event.DesignSubmittedEvent;
 import com.rainiq.complianceservice.exception.InsufficientException;
+import com.rainiq.complianceservice.exception.ResourceNotFoundException;
 import com.rainiq.complianceservice.topics.KafkaTopics;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +53,7 @@ public class ComplianceService {
                 .reason(complianceRecord.getReason()).build();
         kafkaTemplate.send(KafkaTopics.COMPLIANCE_FAILED,complianceRecord.getDesignId().toString(),complianceFailedEvent);
     }
+    @Transactional
     public void processCompliance(DesignSubmittedEvent designSubmittedEvent)
     {
         UUID designId=designSubmittedEvent.getDesignId();
@@ -183,6 +189,43 @@ public class ComplianceService {
 
     }
 
+    public ComplianceRecordDto getComplianceRecordByDesignId(UUID designId)
+    {
+        Optional<ComplianceRecord> optionalComplianceRecord=complianceRepository.findByDesignId(designId);
+        if(optionalComplianceRecord.isPresent())
+        {
+            ComplianceRecord complianceRecord=optionalComplianceRecord.get();
+            return mapToDto(complianceRecord);
+        }
+        else
+            throw new ResourceNotFoundException("No compliance record found with given design id");
+    }
+    public List<ComplianceRecordDto> getAllComplianceRecords()
+    {
+        List<ComplianceRecord> complianceRecordList=complianceRepository.findAll();
+        return complianceRecordList.stream().map(this::mapToDto).collect(Collectors.toList());
+    }
+
+    public List<ComplianceRecordDto> getAllComplianceRecordsByStatus(ComplianceStatus complianceStatus)
+    {
+        List<ComplianceRecord> complianceRecordList=complianceRepository.findByComplianceStatus(complianceStatus);
+        return complianceRecordList.stream().map(this::mapToDto).collect(Collectors.toList());
+    }
+
+    private ComplianceRecordDto mapToDto(ComplianceRecord complianceRecord)
+    {
+        ComplianceRecordDto complianceRecordDto=ComplianceRecordDto.builder()
+                .id(complianceRecord.getId())
+                .designId(complianceRecord.getDesignId())
+                .propertyId(complianceRecord.getPropertyId())
+                .complianceStatus(complianceRecord.getComplianceStatus())
+                .reason(complianceRecord.getReason())
+                .calculatedCapacity(complianceRecord.getCalculatedCapacity())
+                .checkedAt(complianceRecord.getCheckedAt())
+                .recommendedArea(complianceRecord.getRecommendedArea())
+                .build();
+        return complianceRecordDto;
+    }
     private BigDecimal calculateCapacity(BigDecimal designArea, Double annualRainfall,Double cof)
     {
         return designArea.multiply(BigDecimal.valueOf(annualRainfall)).multiply(BigDecimal.valueOf(cof));

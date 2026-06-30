@@ -22,4 +22,16 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.NOT_ACCEPTABLE.value()).build();
         return new ResponseEntity<>(response,HttpStatus.NOT_ACCEPTABLE);
     }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<?> resourceNotFoundException(ResourceNotFoundException exception, WebRequest request)
+    {
+        ErrorResponse response=ErrorResponse.builder()
+                .msg(exception.getMessage())
+                .occurredAt(LocalDateTime.now())
+                .error("Not Found")
+                .path(request.getDescription(false))
+                .status(HttpStatus.NOT_FOUND.value()).build();
+        return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+    }
 }
