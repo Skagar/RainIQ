@@ -66,9 +66,14 @@ public class ComplianceService {
         DesignClientDto designClientDto=new DesignClientDto();
         PropertyClientDto propertyClientDto=new PropertyClientDto();
         RainfallClientDto rainfallClientDto=new RainfallClientDto();
-        designClientDto= designClient.getDesignDetails(designId);
-        propertyClientDto=propertyClient.getPropertyDetails(propertyId);
-        rainfallClientDto=rainfallClient.getRainfallDetails(propertyClientDto.getPincode());
+        try {
+            designClientDto = designClient.getDesignDetails(designId);
+            propertyClientDto = propertyClient.getPropertyDetails(propertyId);
+            rainfallClientDto = rainfallClient.getRainfallDetails(propertyClientDto.getPincode());
+        } catch (Exception e) {
+            System.out.println("Failed to fetch data for compliance check: " + e.getMessage());
+            return;
+        }
         double avgRainfall= (rainfallClientDto.getAvgRainfall())*10;
         double avgRainfallInMetres = avgRainfall / 1000.0;
         BigDecimal designArea=designClientDto.getDesignArea();
