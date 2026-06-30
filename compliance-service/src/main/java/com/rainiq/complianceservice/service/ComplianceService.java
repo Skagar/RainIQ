@@ -230,7 +230,6 @@ public class ComplianceService {
     {
         return designArea.multiply(BigDecimal.valueOf(annualRainfall)).multiply(BigDecimal.valueOf(cof));
     }
-
     }
 
 
