@@ -33,6 +33,26 @@ public class GlobalExceptionHandler {
                 request.getDescription(false));
         return new ResponseEntity<>(errorResponse,HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(  ServiceUnavailableException.class)
+    public ResponseEntity<?> serviceUnavailableException(ServiceUnavailableException exception, WebRequest request)
+    {
+        Response errorResponse = new Response(new Date(),
+                HttpStatus.SERVICE_UNAVAILABLE.value(),
+                "SERVICE_UNAVAILABLE",
+                exception.getMessage(),
+                request.getDescription(false));
+        return new ResponseEntity<>(errorResponse,HttpStatus.SERVICE_UNAVAILABLE);
+    }
+    @ExceptionHandler(  ComplianceStatusException.class)
+    public ResponseEntity<?> complianceStatusException(ComplianceStatusException exception, WebRequest request)
+    {
+        Response errorResponse = new Response(new Date(),
+                HttpStatus.CONTINUE.value(),
+                "Staus Conflict",
+                exception.getMessage(),
+                request.getDescription(false));
+        return new ResponseEntity<>(errorResponse,HttpStatus.CONFLICT);
+    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> validationException(MethodArgumentNotValidException exception, WebRequest request) {
         String errorMessage = exception.getBindingResult()

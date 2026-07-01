@@ -1,10 +1,13 @@
 package com.rainiq.designservice.service;
 
+import com.rainiq.designservice.client.ComplianceClient;
+import com.rainiq.designservice.dto.ComplianceResponseDto;
 import com.rainiq.designservice.dto.ReviewRequest;
 import com.rainiq.designservice.dto.ReviewResponse;
 import com.rainiq.designservice.entity.Design;
 import com.rainiq.designservice.entity.Review;
 import com.rainiq.designservice.entity.ReviewStatus;
+import com.rainiq.designservice.exception.ComplianceStatusException;
 import com.rainiq.designservice.exception.InvalidRequestException;
 import com.rainiq.designservice.repo.DesignRepository;
 import com.rainiq.designservice.repo.ReviewRepository;
@@ -22,6 +25,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ReviewService {
     private final ReviewRepository reviewRepository;
+    private final ComplianceClient complianceClient;
 
     public List<ReviewResponse> getAllPendingReviews()
     {
@@ -37,6 +41,13 @@ public class ReviewService {
     @Transactional
     public ReviewResponse updateReviewByDesignId(UUID designId, ReviewRequest reviewRequest,String email)
     {
+             if(reviewRequest.getStatus()==ReviewStatus.APPROVED)
+             {
+                 ComplianceResponseDto dto=complianceClient.getCompliance(designId);
+                 if(!dto.getStatus().equalsIgnoreCase("passed"))
+                     throw new ComplianceStatusException("Cannot approve design — compliance status is not PASSED");
+             }
+
             Review review=reviewRepository.findByDesign_Id(designId).orElseThrow(()->new InvalidRequestException("No review exist for the given design  id"));
             if(review.getOfficerEmail()==null)
             {
