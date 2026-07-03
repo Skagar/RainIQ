@@ -22,4 +22,17 @@ public class GlobalExceptionHandler {
                 .build();
         return errorResponse;
     }
+
+    @ExceptionHandler(InvalidRequestException.class)
+    public ErrorResponse invalidRequestException(InvalidRequestException exception,WebRequest webRequest)
+    {
+        ErrorResponse errorResponse=ErrorResponse.builder()
+                .message(exception.getMessage())
+                .error("Invalid_Request")
+                .status(HttpStatus.CONFLICT.value())
+                .timeStamp(LocalDateTime.now())
+                .path(webRequest.getDescription(false))
+                .build();
+        return errorResponse;
+    }
 }
