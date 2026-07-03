@@ -10,8 +10,6 @@ import java.util.UUID;
 
 @Repository
 public interface TankReadingRepository extends JpaRepository<TankReading, UUID> {
-    List<TankReading> findByPropertyId(UUID propertyId);
-
     Optional<TankReading> findTopByPropertyIdOrderByRecordedAtDesc(UUID propertyId);
-    Optional<TankReading> findByDeviceId(String deviceId);
+    List<TankReading> findByPropertyIdOrderByRecordedAtDesc(UUID propertyId);
 }

@@ -12,10 +12,5 @@ import java.util.UUID;
 @Repository
 public interface MonitoringDeviceRepository extends JpaRepository<MonitoringDevice,UUID> {
     Optional<MonitoringDevice> findByPropertyId(UUID propertyId);
-
-    Optional<MonitoringDevice> findByDesignId(UUID designId);
-
     Optional<MonitoringDevice> findByDeviceId(String deviceId);
-
-    List<MonitoringDevice> findByStatus(MonitoringStatus status);
 }
