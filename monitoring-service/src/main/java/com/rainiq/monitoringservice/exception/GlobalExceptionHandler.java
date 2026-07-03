@@ -35,4 +35,17 @@ public class GlobalExceptionHandler {
                 .build();
         return errorResponse;
     }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ErrorResponse ResourceNotFoundException(ResourceNotFoundException exception,WebRequest webRequest)
+    {
+        ErrorResponse errorResponse=ErrorResponse.builder()
+                .message(exception.getMessage())
+                .error("Not_Found")
+                .status(HttpStatus.NOT_FOUND.value())
+                .timeStamp(LocalDateTime.now())
+                .path(webRequest.getDescription(false))
+                .build();
+        return errorResponse;
+    }
 }

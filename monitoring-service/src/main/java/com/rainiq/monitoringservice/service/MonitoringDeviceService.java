@@ -7,12 +7,14 @@ import com.rainiq.monitoringservice.dto.MonitoringDeviceResponse;
 import com.rainiq.monitoringservice.entity.MonitoringDevice;
 import com.rainiq.monitoringservice.entity.MonitoringStatus;
 import com.rainiq.monitoringservice.exception.InvalidRequestException;
+import com.rainiq.monitoringservice.exception.ResourceNotFoundException;
 import com.rainiq.monitoringservice.repository.MonitoringDeviceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +45,15 @@ public class MonitoringDeviceService {
                 .installedBy(email)
                 .build();
         monitoringDeviceRepository.save(monitoringDevice);
+        return mapToDto(monitoringDevice);
+    }
+
+    public MonitoringDeviceResponse getDeviceByPropertyId(UUID propertyId)
+    {
+        Optional<MonitoringDevice> optionalMonitoringDevice=monitoringDeviceRepository.findByPropertyId(propertyId);
+        if(!optionalMonitoringDevice.isPresent())
+        throw new ResourceNotFoundException("No device found registered with given property id");
+        MonitoringDevice monitoringDevice=optionalMonitoringDevice.get();
         return mapToDto(monitoringDevice);
     }
 
