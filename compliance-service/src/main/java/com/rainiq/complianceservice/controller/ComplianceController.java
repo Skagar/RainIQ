@@ -35,7 +35,7 @@ public class ComplianceController {
     }
 
     @GetMapping("/{designId}")
-    @PreAuthorize("hasRole('MUNICIPAL_OFFICER')")
+    @PreAuthorize("hasRole('MUNICIPAL_OFFICER') or hasRole('INTERNAL_SERVICE')")
     public ResponseEntity<ComplianceRecordDto> getRecordByDesignId(@PathVariable UUID designId)
     {
         return ResponseEntity.ok(complianceService.getComplianceRecordByDesignId(designId));
