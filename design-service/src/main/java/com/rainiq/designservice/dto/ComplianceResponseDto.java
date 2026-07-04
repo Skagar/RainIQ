@@ -13,5 +13,5 @@ import java.util.UUID;
 @Builder
 public class ComplianceResponseDto {
     private UUID designId;
-    private String status;
+    private String complianceStatus;
 }

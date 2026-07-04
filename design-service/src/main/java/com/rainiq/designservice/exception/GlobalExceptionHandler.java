@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> complianceStatusException(ComplianceStatusException exception, WebRequest request)
     {
         Response errorResponse = new Response(new Date(),
-                HttpStatus.CONTINUE.value(),
+                HttpStatus.CONFLICT.value(),
                 "Staus Conflict",
                 exception.getMessage(),
                 request.getDescription(false));

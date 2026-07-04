@@ -20,15 +20,17 @@ public class ComplianceClient {
 
     public ComplianceResponseDto getCompliance (UUID designId)
     {
+        System.out.println("Token is -> " + token);
         try {
             return restClient.get().
-                    uri("api/compliances/{designId}", designId)
+                    uri("/api/compliances/{designId}", designId)
                     .header("Authorization", "Bearer " + token)
                     .retrieve()
                     .body(ComplianceResponseDto.class);
         }
         catch (Exception e)
         {
+            System.out.println("Message is ->"+e.getMessage());
             throw new ServiceUnavailableException("Compliance Service is down try again later");
         }
 

@@ -44,7 +44,7 @@ public class ReviewService {
              if(reviewRequest.getStatus()==ReviewStatus.APPROVED)
              {
                  ComplianceResponseDto dto=complianceClient.getCompliance(designId);
-                 if(!dto.getStatus().equalsIgnoreCase("passed"))
+                 if(!dto.getComplianceStatus().equalsIgnoreCase("passed"))
                      throw new ComplianceStatusException("Cannot approve design — compliance status is not PASSED");
              }
 
