@@ -137,39 +137,6 @@ public class DesignService {
        }
    }
     @Transactional
-    public DesignResponse updateDesign(DesignRequest designRequest, String userEmail, UUID designId)
-    {
-        Optional<Design> existingDesign=designRepository.findById(designId);
-        if(existingDesign.isPresent())
-        {
-            Design design=existingDesign.get();
-            if(design.getUserEmail().equalsIgnoreCase(userEmail))
-            {
-                Optional<Review> optionalReview=reviewRepository.findByDesign_Id(designId);
-                if(optionalReview.isPresent())
-                {
-                    Review review=optionalReview.get();
-                    if(review.getOfficerEmail()==null)
-                    {
-                            design.setLocation(designRequest.getLocation());
-                            design.setArea(designRequest.getArea());
-                            designRepository.save(design);
-                            return maptoDesignResponse(design,review);
-                    }
-                    else
-                        throw new InvalidRequestException("Cannot Update the design currently under Review");
-                }
-                else
-                    throw new ResourceNotFoundException("Review not found for the given design id");
-            }
-            else
-                throw new InvalidRequestException("Email associated with given design id not matches with the given email");
-
-        }
-        else
-            throw new ResourceNotFoundException("Design not found with given Design id");
-    }
-    @Transactional
     public void deleteDesign(UUID designId, String userEmail)
     {
         Design design=designRepository.findById(designId).orElseThrow(()->new ResourceNotFoundException("No design found with given id"));

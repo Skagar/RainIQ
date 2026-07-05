@@ -42,14 +42,6 @@ public class DesignController {
    return ResponseEntity.ok(designService.getDesignById(id));
     }
 
-    @PutMapping("/{id}")
-    @PreAuthorize("hasRole('OWNER') or hasRole('ARCHITECT')")
-    public ResponseEntity<DesignResponse> updateDesign(@RequestBody @Valid DesignRequest designRequest, @PathVariable UUID id)
-    {
-        String email=(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ResponseEntity.ok(designService.updateDesign(designRequest,email,id));
-    }
-
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('OWNER') or hasRole('ARCHITECT')")
     public ResponseEntity<Void> deleteDesign(@PathVariable UUID id)
