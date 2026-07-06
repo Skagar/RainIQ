@@ -20,6 +20,15 @@ spring:
     locations: classpath:db/migration
   kafka:
     bootstrap-servers: localhost:9092
+    consumer:
+      group-id: my-consumer-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDesrializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDesrializer
+      properties:
+        spring.json.trusted.packages: "*"
+        spring .json.value.default.type: com.rainiq.aiservice.event.ComplianceCompletedEvent
+        spring.json.use.type.headers: false
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
