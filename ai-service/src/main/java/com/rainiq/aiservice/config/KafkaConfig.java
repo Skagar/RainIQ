@@ -17,4 +17,13 @@ public class KafkaConfig {
                 .partitions(1)
                 .build();
     }
+
+    @Bean
+    public NewTopic aiCompletedTopic()
+    {
+        return TopicBuilder.name(KafkaTopics.AI_COMPLETED)
+                .replicas(1)
+                .partitions(1)
+                .build();
+    }
 }
