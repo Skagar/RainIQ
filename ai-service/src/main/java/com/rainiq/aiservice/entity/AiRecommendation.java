@@ -43,8 +43,8 @@ public class AiRecommendation {
     @Column(name = "estimated_annual_savings_inr")
     private BigDecimal estimatedAnnualSavingsInr;
 
-    @Column(name = "raw_gemini_response")
-    private String rawGeminiResponse;
+    @Column(name = "comments")
+    private String comments;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)

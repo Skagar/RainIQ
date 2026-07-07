@@ -22,4 +22,16 @@ public class GlobalExceptionHandler {
                 .build();
         return new ResponseEntity<>(errorResponse,HttpStatus.SERVICE_UNAVAILABLE);
     }
+    @ExceptionHandler(GeminiResponseException.class)
+    public ResponseEntity<?> geminiResponseException(GeminiResponseException exception, WebRequest webRequest)
+    {
+        ErrorResponse errorResponse=ErrorResponse.builder()
+                .message(exception.getMessage())
+                .error("NO_CONTENT")
+                .status(HttpStatus.NO_CONTENT.value())
+                .timeStamp(LocalDateTime.now())
+                .path(webRequest.getDescription(false))
+                .build();
+        return new ResponseEntity<>(errorResponse,HttpStatus.NO_CONTENT);
+    }
 }

@@ -3,7 +3,7 @@ package com.rainiq.aiservice.client;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rainiq.aiservice.dto.gemini.*;
-import lombok.RequiredArgsConstructor;
+import com.rainiq.aiservice.exception.GeminiResponseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -21,10 +21,10 @@ public class GeminiClient {
     private String model;
     private final RestClient restClient;
     private final ObjectMapper objectMapper;
-    public GeminiClient(@Value("${gemini.base.url}") String baseUrl)
+    public GeminiClient(@Value("${gemini.base.url}") String baseUrl,ObjectMapper objectMapper)
     {
         this.restClient=RestClient.builder().baseUrl(baseUrl).build();
-        objectMapper=new ObjectMapper();
+        this.objectMapper=objectMapper;
     }
 
     public GeminiRecommendationDto generateRecommendation(String prompt) throws JsonProcessingException {
@@ -67,7 +67,19 @@ public class GeminiClient {
                 .body(geminiRequest)
                 .retrieve()
                 .body(GeminiResponse.class);
+        if(geminiResponse.getCandidates().isEmpty())
+            throw new GeminiResponseException("No candidates returned");
+        if(geminiResponse.getCandidates().get(0).getContent().getParts().isEmpty())
+            throw new GeminiResponseException("No parts Returned");
         String jsonText=geminiResponse.getCandidates().get(0).getContent().getParts().get(0).getText();
-        return objectMapper.readValue(jsonText,GeminiRecommendationDto.class);
+
+        try {
+            return objectMapper.readValue(jsonText, GeminiRecommendationDto.class);
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            throw new GeminiResponseException("Failed to parse Gemini response");
+        }
     }
 }

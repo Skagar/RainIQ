@@ -8,7 +8,7 @@ create table ai_recommendation(
     recommended_filtration_type varchar(200),
     estimated_cost_inr NUMERIC(15,2),
     estimated_annual_savings_inr NUMERIC(15,2),
-    raw_gemini_response TEXT,
+    comments TEXT,
     status varchar(15) check ( status in ('GENERATED','FAILED') ),
     created_at TIMESTAMP
 );
