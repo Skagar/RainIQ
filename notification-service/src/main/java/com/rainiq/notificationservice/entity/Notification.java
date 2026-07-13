@@ -30,7 +30,7 @@ public class Notification {
     @Column(name = "recommendation_id")
     private UUID recommendationId;
 
-    @Column(name = "recipient_email",nullable = false)
+    @Column(name = "recipient_email")
     private String recipientEmail;
 
     @Column(name = "event_type",nullable = false)
