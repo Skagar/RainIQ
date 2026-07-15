@@ -6,9 +6,9 @@ spring:
     name: auth-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/rainiq_auth
-    username: postgres
-    password: rainiq123
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/rainiq_auth}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:rainiq123}
 
   jpa:
     hibernate:
@@ -37,3 +37,7 @@ springdoc:
 jwt:
   secret: ${JWT_SECRET:thisIsAVeryLongSecretKeyForRainIQProjectThatIsAtLeast256BitsLong}
   expiration: ${JWT_EXPIRATION:63072000000}
+eureka:
+  client:
+    service-url:
+      defaultZone:   ${EUREKA_URI:http://localhost:8761/eureka}
