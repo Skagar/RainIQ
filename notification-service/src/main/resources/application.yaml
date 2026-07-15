@@ -5,9 +5,9 @@ spring:
   application:
     name: notification-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/rainiq_notification
-    username: postgres
-    password: rainiq123
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/rainiq_notification}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:rainiq123}
   jpa:
     hibernate:
       ddl-auto: validate
@@ -20,7 +20,7 @@ spring:
     enabled: true
     locations: classpath:db/migration
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     consumer:
       group-id: notification-service-group
       auto-offset-reset: earliest
@@ -57,3 +57,7 @@ design:
 internal:
   service:
     token: eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJpbnRlcm5hbEByYWluaXEuY29tIiwiaWF0IjoxNzgyNjQzNTYwLCJleHAiOjE4NDU3MTU1NjAsInJvbGUiOiJJTlRFUk5BTF9TRVJWSUNFIn0.AAKbNV5FQVu2pCWV6jiy3-oiJZ51fDgZCi1tGO_KrvfmM2EwCggwjzaPBoQcjwvo
+eureka:
+  client:
+    service-url:
+      defaultZone:   ${EUREKA_URI:http://localhost:8761/eureka}
