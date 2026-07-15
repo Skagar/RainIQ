@@ -5,9 +5,9 @@ spring:
   application:
     name: rainfall-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/rainiq_rainfall
-    username: postgres
-    password: rainiq123
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/rainiq_rainfall}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:rainiq123}
 
   jpa:
     hibernate:
@@ -42,3 +42,7 @@ geocoding:
 openmeteo:
   base:
     url: https://historical-api.open-meteo.com
+eureka:
+  client:
+    service-url:
+      defaultZone:   ${EUREKA_URI:http://localhost:8761/eureka}
