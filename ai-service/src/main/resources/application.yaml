@@ -4,9 +4,9 @@ spring:
   application:
     name: ai-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/rainiq_ai
-    username: postgres
-    password: rainiq123
+    url:  ${DB_URL:jdbc:postgresql://localhost:5432/rainiq_ai}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:rainiq123}
   jpa:
     hibernate:
       ddl-auto: validate
@@ -19,7 +19,7 @@ spring:
     enabled: true
     locations: classpath:db/migration
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     consumer:
       group-id: ai-service-group
       auto-offset-reset: earliest
@@ -61,3 +61,7 @@ gemini:
   model: gemini-2.5-flash
   base:
     url: https://generativelanguage.googleapis.com/v1beta
+eureka:
+  client:
+    service-url:
+      defaultZone:   ${EUREKA_URI:http://localhost:8761/eureka}
