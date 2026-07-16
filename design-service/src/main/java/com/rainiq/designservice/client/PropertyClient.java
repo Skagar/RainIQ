@@ -10,9 +10,9 @@ import java.util.UUID;
 @Component
 public class PropertyClient {
     private final RestClient restClient;
-    public PropertyClient(@Value("${property.service.url}") String baseUrl)
+    public PropertyClient(RestClient.Builder loadBalancedRestClientBuilder)
     {
-        this.restClient=RestClient.builder().baseUrl(baseUrl).build();
+        this.restClient=loadBalancedRestClientBuilder.baseUrl("http://property-service").build();
     }
     public Boolean propertyExists(UUID propertyId,String token)
     {

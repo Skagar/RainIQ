@@ -13,9 +13,9 @@ public class ComplianceClient {
     @Value("${internal.service.token}")
     String token;
     private final RestClient restClient;
-    public ComplianceClient(@Value("${compliance.service.url}") String baseUrl)
+    public ComplianceClient(RestClient.Builder loadBalancedRestClientBuilder)
     {
-        this.restClient=RestClient.builder().baseUrl(baseUrl).build();
+        this.restClient=loadBalancedRestClientBuilder.baseUrl("http://compliance-service").build();
     }
 
     public ComplianceResponseDto getCompliance (UUID designId)
