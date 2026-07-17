@@ -13,8 +13,9 @@ public class PropertyClient {
 
     @Value("${internal.service.token}")
     private String token;
-    public PropertyClient(@Value("${property.service.url}") String baseUrl) {
-        this.restClient = RestClient.builder().baseUrl(baseUrl).build();
+    public PropertyClient(RestClient.Builder loadBalancedRestClientBuilder)
+    {
+        this.restClient=loadBalancedRestClientBuilder.baseUrl("http://property-service").build();
     }
 
     public PropertyClientDto getPropertyDetails(UUID propertyId)

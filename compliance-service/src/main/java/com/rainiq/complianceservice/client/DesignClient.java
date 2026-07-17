@@ -13,8 +13,8 @@ public class DesignClient {
 
     @Value("${internal.service.token}")
     private String token;
-    public DesignClient(@Value("${design.service.url}") String baseUrl) {
-        this.restClient = RestClient.builder().baseUrl(baseUrl).build();
+    public DesignClient(RestClient.Builder loadBalancedRestClientBuilder) {
+        this.restClient = loadBalancedRestClientBuilder.baseUrl("http://design-service").build();
     }
 
     public DesignClientDto getDesignDetails(UUID designId)
