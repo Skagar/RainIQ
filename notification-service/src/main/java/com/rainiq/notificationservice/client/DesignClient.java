@@ -14,9 +14,9 @@ public class DesignClient {
 
     @Value("${internal.service.token}")
     String token;
-    public DesignClient(@Value("${design.service.url}") String baseUrl)
+    public DesignClient(RestClient.Builder loadBalancedRestClientBuilder)
     {
-        this.restClient=RestClient.builder().baseUrl(baseUrl).build();
+        this.restClient=loadBalancedRestClientBuilder.baseUrl("http://design-service").build();
     }
 
     public DesignResponseDto getDesignUserEmail(UUID designId)
