@@ -13,9 +13,9 @@ public class RainfallClient {
 
     private final RestClient restClient;
 
-    public RainfallClient(@Value("${rainfall.service.url}") String baseUrl)
+    public RainfallClient(RestClient.Builder loadBalancedRestClientBuilder)
     {
-        this.restClient=RestClient.builder().baseUrl(baseUrl).build();
+        this.restClient=loadBalancedRestClientBuilder.baseUrl("http://rainfall-service").build();
     }
 
     public RainfallResponseDto getRainfallData(String pincode)
