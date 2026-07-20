@@ -30,11 +30,20 @@
         <java.version>21</java.version>
         <spring-cloud.version>2024.0.2</spring-cloud.version>
     </properties>
+
     <dependencies>
+        <!-- Required: Provides Tomcat and core Spring MVC classes -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- Corrected: Official Spring Cloud MVC Gateway starter -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-gateway-server-webmvc</artifactId>
+            <artifactId>spring-cloud-starter-gateway-mvc</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
@@ -46,6 +55,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -66,5 +76,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

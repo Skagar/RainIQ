@@ -1,3 +1,37 @@
+server:
+  port: 8182
 spring:
   application:
     name: api-gateway
+  cloud:
+    gateway:
+      mvc:
+        routes:
+          - id: design-service
+            uri: lb://design-service
+            predicates:
+              - Path=/api/designs/**,/api/reviews/**
+          - id: auth-service
+            uri: lb://auth-service
+            predicates:
+              - Path=/api/auth/**
+          - id: property-service
+            uri: lb://property-service
+            predicates:
+              - Path=/api/properties/**
+          - id: compliance-service
+            uri: lb://compliance-service
+            predicates:
+              - Path=/api/compliances/**
+          - id: rainfall-service
+            uri: lb://rainfall-service
+            predicates:
+              - Path=/api/rainfalls/**
+          - id: monitoring-service
+            uri: lb://monitoring-service
+            predicates:
+              - Path=/api/monitoring/**
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
