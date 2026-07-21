@@ -34,7 +34,8 @@ public class SecurityConfig {
                         "/api/auth/**",
                         "/swagger-ui.html",
                         "/swagger-ui/**",
-                        "/api-docs/**"
+                        "/api-docs/**",
+                        "/actuator/**"
                 ).permitAll().anyRequest().authenticated()).sessionManagement(
                         session ->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)//STATELESS=>Never create a session. Never store authentication in memory. Every request must carry its own proof of identity — a JWT token
         ).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).formLogin(form -> form.disable())

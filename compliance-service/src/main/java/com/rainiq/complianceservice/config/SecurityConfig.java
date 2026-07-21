@@ -24,7 +24,8 @@ public class SecurityConfig {
                         auth.requestMatchers( "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/v3/api-docs",
-                                "/v3/api-docs/**").permitAll().anyRequest().authenticated()).sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).
+                                "/v3/api-docs/**",
+                                "/actuator/**").permitAll().anyRequest().authenticated()).sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).
                 addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).formLogin(formlogin->formlogin.disable()).httpBasic(httpbasic->httpbasic.disable());
         return httpSecurity.build();
     }
