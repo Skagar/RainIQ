@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class AiServiceApplication {
 
     public static void main(String[] args) {
+        java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("Asia/Kolkata"));
         SpringApplication.run(AiServiceApplication.class, args);
     }
 
