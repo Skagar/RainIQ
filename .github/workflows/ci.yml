@@ -1,0 +1,22 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [ ai-service, api-gateway, auth-service, compliance-service, design-service, eureka-server, monitoring-service, notification-service, property-service, rainfall-service ]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: Build and Verify
+        working-directory: ${{ matrix.service }}
+        run: mvn clean verify
+
