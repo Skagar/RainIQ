@@ -1,0 +1,32 @@
+name: cd
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [ ai-service, api-gateway, auth-service, compliance-service, design-service, eureka-server, monitoring-service, notification-service, property-service, rainfall-service ]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: Build jar
+        working-directory: ${{ matrix.service }}
+        run: mvn clean package -DskipTests
+      - name: Login Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker image
+        working-directory: ${{ matrix.service }}
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ matrix.service }}:latest .
+      - name: Push image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ matrix.service }}:latest
