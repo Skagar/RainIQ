@@ -1,5 +1,7 @@
 package com.rainiq.designservice.client;
 
+import com.rainiq.designservice.dto.PropertyResponseDto;
+import com.rainiq.designservice.exception.InvalidRequestException;
 import jakarta.persistence.Column;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -14,18 +16,17 @@ public class PropertyClient {
     {
         this.restClient=loadBalancedRestClientBuilder.baseUrl("http://property-service").build();
     }
-    public Boolean propertyExists(UUID propertyId,String token)
+    public PropertyResponseDto propertyExists(UUID propertyId, String token)
     {
         try
         {
             restClient.get().uri("/api/properties/{id}",propertyId)
                     .header("Authorization","Bearer "+token)
                     .retrieve()
-                    .toBodilessEntity();
-            return true;
+                    .body(PropertyResponseDto.class);
+
         } catch (Exception e) {
-            System.out.println("In property client");
-            return false;
+            throw new InvalidRequestException(e.getMessage());
         }
     }
 }

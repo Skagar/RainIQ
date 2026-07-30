@@ -3,6 +3,7 @@ package com.rainiq.designservice.service;
 import com.rainiq.designservice.client.PropertyClient;
 import com.rainiq.designservice.dto.DesignRequest;
 import com.rainiq.designservice.dto.DesignResponse;
+import com.rainiq.designservice.dto.PropertyResponseDto;
 import com.rainiq.designservice.entity.Design;
 import com.rainiq.designservice.entity.Review;
 import com.rainiq.designservice.entity.ReviewStatus;
@@ -46,10 +47,17 @@ public class DesignService {
         String token = ((ServletRequestAttributes) RequestContextHolder
                 .getRequestAttributes()).getRequest()
                 .getHeader("Authorization").substring(7);
-
-        if (!propertyClient.propertyExists(designRequest.getPropertyId(), token)) {
-            throw new ResourceNotFoundException("Property not found with given ID");
+        PropertyResponseDto propertyResponseDto=new PropertyResponseDto();
+        try {
+             propertyResponseDto = propertyClient.propertyExists(designRequest.getPropertyId(), token);
         }
+        catch (Exception e)
+        {
+            throw new InvalidRequestException("No property found with given id");
+        }
+        if(!propertyResponseDto.getStatus().equalsIgnoreCase("ACTIVE"))
+            throw new InvalidRequestException("Design can't be submitted with the given property id property status is currently "+propertyResponseDto.getStatus());
+
         Optional<Design> existingDesign =designRepository.findByPropertyId(designRequest.getPropertyId());
         if(existingDesign.isPresent())
         {
@@ -58,9 +66,9 @@ public class DesignService {
             if(existingReview.isPresent()) {
                 Review review = existingReview.get();
                 if (review.getStatus() == ReviewStatus.PENDING)
-                    throw new InvalidRequestException("No new design can be submitted with the given email and location for now try again after some time status is pending ");
+                    throw new InvalidRequestException("No new design can be submitted with the given property id for now try again after some time status is pending ");
                 else if (review.getStatus() == ReviewStatus.APPROVED)
-                    throw new InvalidRequestException("No new design can be submitted with the given email and location staus is approved");
+                    throw new InvalidRequestException("No new design can be submitted with the given property id staus is approved");
                 else if (review.getStatus() == ReviewStatus.REJECTED) {
                     design.setArea(designRequest.getArea());
                     review.setOfficerEmail(null);
