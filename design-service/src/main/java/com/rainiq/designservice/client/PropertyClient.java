@@ -20,7 +20,7 @@ public class PropertyClient {
     {
         try
         {
-            restClient.get().uri("/api/properties/{id}",propertyId)
+          return   restClient.get().uri("/api/properties/{id}",propertyId)
                     .header("Authorization","Bearer "+token)
                     .retrieve()
                     .body(PropertyResponseDto.class);
