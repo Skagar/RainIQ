@@ -24,36 +24,44 @@ public class NotificationService {
 
     @Value("${spring.mail.username}")
     private String senderEmail;
-    public void createAiCompletedNotification(String receiverEmail,AiCompletedEvent event)
+    public void createAiCompletedNotification(String receiverEmail, AiCompletedEvent event)
     {
-        String mailBody =
-                STR."""
+        String mailBody = """
 Dear User,
 
 Your AI-generated rainwater harvesting recommendation has been completed successfully.
 
 Recommendation Details:
-Recommendation ID: \{event.getRecommendationId()}
-Design ID: \{event.getDesignId()}
-Property ID: \{event.getPropertyId()}
+Recommendation ID: %s
+Design ID: %s
+Property ID: %s
 
 Recommended Configuration:
-Recommended Tank Size: \{event.getRecommendedTankSizeLiters()} liters
-Recommended Pipe Specification: \{event.getRecommendedPipeSpec()}
-Recommended Filtration Type: \{event.getRecommendedFiltrationType()}
+Recommended Tank Size: %s liters
+Recommended Pipe Specification: %s
+Recommended Filtration Type: %s
 
 Cost & Savings Estimate:
-Estimated Installation Cost: ₹\{event.getEstimatedCostInr()}
-Estimated Annual Savings: ₹\{event.getEstimatedAnnualSavingsInr()}
+Estimated Installation Cost: ₹%s
+Estimated Annual Savings: ₹%s
 
 Thank you for using our AI-powered recommendation service.
 
 Regards,
-RainIQ Team""";
-        SimpleMailMessage mailMessage=new SimpleMailMessage();
+RainIQ Team""".formatted(
+                event.getRecommendationId(),
+                event.getDesignId(),
+                event.getPropertyId(),
+                event.getRecommendedTankSizeLiters(),
+                event.getRecommendedPipeSpec(),
+                event.getRecommendedFiltrationType(),
+                event.getEstimatedCostInr(),
+                event.getEstimatedAnnualSavingsInr()
+        );
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom(senderEmail);
         mailMessage.setTo(receiverEmail);
-        mailMessage.setSubject("Suggested design specifications for your submitted design corresponding to design id "+event.getDesignId());
+        mailMessage.setSubject("Suggested design specifications for your submitted design corresponding to design id " + event.getDesignId());
         mailMessage.setText(mailBody);
         javaMailSender.send(mailMessage);
     }
@@ -103,31 +111,34 @@ RainIQ Team""";
 
 
 
-    public void createComplianceFailedNotification(String receiverEmail,ComplianceFailedEvent event)
+    public void createComplianceFailedNotification(String receiverEmail, ComplianceFailedEvent event)
     {
-        String mailBody =
-                STR."""
+        String mailBody = """
 Dear User,
 
 We regret to inform you that your compliance verification has failed.
 
 Details:
-Design ID: \{event.getDesignId()}
-Property ID: \{event.getPropertyId()}
-Reason: \{event.getReason()}
+Design ID: %s
+Property ID: %s
+Reason: %s
 
 Please review the above reason, make the necessary changes, and resubmit your design for compliance verification.
 
 If you have any questions or need assistance, feel free to contact our support team.
 
 Regards,
-RainIQ Team""";
-       SimpleMailMessage mailMessage=new SimpleMailMessage();
-       mailMessage.setTo(receiverEmail);
-       mailMessage.setFrom(senderEmail);
-       mailMessage.setSubject("Compliance verification failed for your design");
-       mailMessage.setText(mailBody);
-       javaMailSender.send(mailMessage);
+RainIQ Team""".formatted(
+                event.getDesignId(),
+                event.getPropertyId(),
+                event.getReason()
+        );
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(receiverEmail);
+        mailMessage.setFrom(senderEmail);
+        mailMessage.setSubject("Compliance verification failed for your design");
+        mailMessage.setText(mailBody);
+        javaMailSender.send(mailMessage);
     }
     private void sendAndRecord(String recipientEmail, ComplianceFailedEvent event, EventType eventType) {
         try {
