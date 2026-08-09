@@ -1,4 +1,104 @@
 services:
+  ai-service:
+    image: skagar/ai-service:latest
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/rainiq_ai
+      EUREKA_URI: http://eureka-server:8761/eureka
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      GEMINI_API_KEY: AQ:Ab8RN6K1Ae4dUgsRshSZzlLbkEj6PjJcOXEkDlTuQrtZgur2ZA
+    depends_on:
+      - postgres
+      - eureka-server
+      - kafka
+    ports:
+      - "8086:8086"
+  auth-service:
+    image: skagar/auth-service:latest
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/rainiq_auth
+      EUREKA_URI: http://eureka-server:8761/eureka
+    depends_on:
+      - postgres
+      - eureka-server
+    ports:
+      - "8080:8080"
+  compliance-service:
+    image: skagar/compliance-service:latest
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/rainiq_compliance
+      EUREKA_URI: http://eureka-server:8761/eureka
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    depends_on:
+      - postgres
+      - eureka-server
+      - kafka
+    ports:
+      - "8084:8084"
+  design-service:
+    image: skagar/design-service:latest
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/rainiq_design
+      EUREKA_URI: http://eureka-server:8761/eureka
+    depends_on:
+      - postgres
+      - eureka-server
+    ports:
+      - "8081:8081"
+  monitoring-service:
+    image: skagar/monitoring-service:latest
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/rainiq_monitoring
+      EUREKA_URI: http://eureka-server:8761/eureka
+    depends_on:
+      - postgres
+      - eureka-server
+    ports:
+      - "8085:8085"
+  notification-service:
+    image: skagar/notification-service:latest
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/rainiq_notification
+      EUREKA_URI: http://eureka-server:8761/eureka
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      MAIL_APP_PASSWORD: agns lvlp bjva czlj
+    depends_on:
+      - postgres
+      - eureka-server
+      - kafka
+    ports:
+      - "8087:8087"
+  property-service:
+    image: skagar/property-service:latest
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/rainiq_property
+      EUREKA_URI: http://eureka-server:8761/eureka
+    depends_on:
+      - postgres
+      - eureka-server
+    ports:
+      - "8082:8082"
+  rainfall-service:
+    image: skagar/rainfall-service:latest
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/rainiq_rainfall
+      EUREKA_URI: http://eureka-server:8761/eureka
+    depends_on:
+      - postgres
+      - eureka-server
+    ports:
+      - "8083:8083"
+  eureka-server:
+    image: skagar/eureka-server:latest
+    ports:
+      - "8761:8761"
+  api-gateway:
+    image: skagar/api-gateway:latest
+    environment:
+      EUREKA_URI: http://eureka-server:8761/eureka
+    depends_on:
+      - eureka-server
+    ports:
+      - "8182:8182"
   kafka:
     image: apache/kafka:3.9.1
     container_name: kafka
@@ -11,7 +111,7 @@ services:
       KAFKA_PROCESS_ROLES: broker,controller
 
       KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
 
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
