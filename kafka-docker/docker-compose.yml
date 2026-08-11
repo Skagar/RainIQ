@@ -39,6 +39,7 @@ services:
     environment:
       DB_URL: jdbc:postgresql://postgres:5432/rainiq_design
       EUREKA_URI: http://eureka-server:8761/eureka
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
       - postgres
       - eureka-server
