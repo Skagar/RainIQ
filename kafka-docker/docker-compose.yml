@@ -84,6 +84,7 @@ services:
     environment:
       DB_URL: jdbc:postgresql://postgres:5432/rainiq_rainfall
       EUREKA_URI: http://eureka-server:8761/eureka
+      GEOCODING_API_KEY: 6a3a5858589cc617535788zsb56714d
     depends_on:
       - postgres
       - eureka-server
